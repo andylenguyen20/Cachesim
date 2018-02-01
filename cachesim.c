@@ -218,13 +218,13 @@ int main(int argc, char* argv[]){
 	//get stuff ready for reading file and using fgets
 	char* fileName = argv[1];
 	FILE *fr = fopen(fileName,"rt");
-  int cacheSizeKB = atoi(argv[2]);
-  associativity = atoi(argv[3]);
-  blockSize = atoi(argv[4]);
+  	int cacheSizeKB = atoi(argv[2]);
+  	associativity = atoi(argv[3]);
+  	blockSize = atoi(argv[4]);
 	const int sets = cacheSizeKB * (2<<9) / blockSize / associativity;
 
 	//initialize global variables
-  offsetBits = log2(blockSize);
+  	offsetBits = log2(blockSize);
 	indexBits = log2(sets);
 
 	//initialize cache and mainMemory here. VERY IMPORTANT!!!
@@ -237,8 +237,8 @@ int main(int argc, char* argv[]){
 	}
 
 	//perform instructions in a while loop until file ends
-  char instruction[6];
-  while(fscanf(fr, "%s", instruction) != EOF){
+  	char instruction[6];
+  	while(fscanf(fr, "%s", instruction) != EOF){
 		if(strcmp(instruction,"load") == 0){
 			//get address
 			char accessAddressHex[9];
@@ -247,27 +247,27 @@ int main(int argc, char* argv[]){
 			//get size of address
 			int sizeOfAccess;
 			fscanf(fr, "%d", &sizeOfAccess);
-      load(accessAddress, sizeOfAccess, cache);
-    }else if(strcmp(instruction,"store") == 0){
+      			load(accessAddress, sizeOfAccess, cache);
+    		}else if(strcmp(instruction,"store") == 0){
 			//get address
 			char accessAddressHex[9];
-      fscanf(fr, "%s", accessAddressHex);
-      int accessAddress = (int)strtol(accessAddressHex, NULL, 16);
+      			fscanf(fr, "%s", accessAddressHex);
+      			int accessAddress = (int)strtol(accessAddressHex, NULL, 16);
 			//get size of address
 			int sizeOfAccess;
-      fscanf(fr, "%d", &sizeOfAccess);
-      char writeByteArray[sizeOfAccess];
+      			fscanf(fr, "%d", &sizeOfAccess);
+      			char writeByteArray[sizeOfAccess];
 			//get bytes to be written to memory and maybe also to cache
 			char byte;
-      for(int i = 0; i < sizeOfAccess; i = i + 1){
-        fscanf(fr, "%2hhx", &byte);
+      			for(int i = 0; i < sizeOfAccess; i = i + 1){
+        			fscanf(fr, "%2hhx", &byte);
 				writeByteArray[i] = byte;
-      }
-      store(accessAddress, sizeOfAccess, writeByteArray, cache);
-    }else{
-      return EXIT_FAILURE;
-    }
-  }
+      			}
+      			store(accessAddress, sizeOfAccess, writeByteArray, cache);
+    		}else{
+      			return EXIT_FAILURE;
+    		}
+  	}
 	freeMemory(cache, sets);
 	fclose(fr);
 	return EXIT_SUCCESS;
